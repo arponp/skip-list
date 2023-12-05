@@ -99,10 +99,25 @@ class SkipList():
     # Create and insert a node with the given key, value, and toplevel.
     # The key is guaranteed to not be in the skiplist.
     def insert(self, key, value, toplevel):
-        print('Placeholder')
+        A = [None] * (1+toplevel)
+        level = toplevel
+        curr = self.headnode
+        while level >= 0:
+            if curr.pointers[level].key < key:
+                curr = curr.pointers[level]
+            else:
+                A[level] = curr
+                level -= 1
+        insert_node = Node(key, value, toplevel, [None]*(1+toplevel))
+        level = toplevel
+        while level >= 0:
+            insert_node.pointers[level] = A[level].pointers[level]
+            A[level].pointers[level] = insert_node
+            level -= 1
 
     # Delete node with the given key.
     # The key is guaranteed to be in the skiplist.
+
     def delete(self, key):
         print('Placeholder')
 
@@ -110,5 +125,18 @@ class SkipList():
     # Construct a list of all the keys in all the nodes visited during the search.
     # Append the value associated to the given key to this list.
     def search(self, key) -> str:
-        A = ['your list gets constructed here']
+        A = []
+        level = self.maxlevel
+        curr = self.headnode
+        prev = None
+        while curr.key != key:
+            if prev != curr:
+                A.append(curr.key)
+                prev = curr
+            if curr.pointers[level].key <= key:
+                curr = curr.pointers[level]
+            else:
+                level -= 1
+        A.append(curr.key)
+        A.append(curr.value)
         return json.dumps(A, indent=2)
