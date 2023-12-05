@@ -119,7 +119,15 @@ class SkipList():
     # The key is guaranteed to be in the skiplist.
 
     def delete(self, key):
-        print('Placeholder')
+        pointers = []
+        curr = self.headnode
+        while curr.key != key:
+            for i, pointer in enumerate(curr.pointers):
+                if pointer.key == key:
+                    pointers.append((curr, i))
+            curr = curr.pointers[0]
+        for node, i in pointers:
+            node.pointers[i] = node.pointers[i].pointers[i]
 
     # Search for the given key.
     # Construct a list of all the keys in all the nodes visited during the search.
